@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="json" type="mix">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/_build/dev/lib/json/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/test/lib/json/ebin" />
+    </CLASSES>
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/deps/json/lib" />
+    </SOURCES>
+  </library>
+</component>
