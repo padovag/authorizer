@@ -7,28 +7,34 @@ defmodule AuthorizerTest do
       %{"transaction" => %{"amount" => 10, "merchant" => "Mc Donalds", "time" => "2019-02-13T08:00:00.000Z"}},
       %{"account" => %{"active-card" => true, "available-limit" => 100}},
       %{"account" => %{"active-card" => true, "available-limit" => 100}},
+      %{"account" => %{"active-card" => true, "available-limit" => 200}},
       %{"transaction" => %{"amount" => 10, "merchant" => "Mc Donalds", "time" => "2019-02-13T09:00:00.000Z"}},
       %{"transaction" => %{"amount" => 10, "merchant" => "Mc Donalds", "time" => "2019-02-13T09:00:01.000Z"}},
+      %{"transaction" => %{"amount" => 10, "merchant" => "Mc Donalds", "time" => "2019-02-13T09:05:00.000Z"}},
       %{"transaction" => %{"amount" => 50, "merchant" => "Burger King", "time" => "2019-02-13T10:00:00.000Z"}},
       %{"transaction" => %{"amount" => 90, "merchant" => "Habib's", "time" => "2019-02-13T11:00:00.000Z"}},
-      %{"transaction" => %{"amount" => 20, "merchant" => "Bobs", "time" => "2019-02-13T12:00:00.000Z"}},
+      %{"transaction" => %{"amount" => 10, "merchant" => "Bobs", "time" => "2019-02-13T12:00:00.000Z"}},
       %{"transaction" => %{"amount" => 5, "merchant" => "Bobs", "time" => "2019-02-13T13:00:01.000Z"}},
       %{"transaction" => %{"amount" => 5, "merchant" => "Habib's", "time" => "2019-02-13T12:00:02.000Z"}},
-      %{"transaction" => %{"amount" => 5, "merchant" => "Mc Donalds", "time" => "2019-02-13T12:00:03.000Z"}}
+      %{"transaction" => %{"amount" => 5, "merchant" => "Mc Donalds", "time" => "2019-02-13T12:00:03.000Z"}},
+      %{"transaction" => %{"amount" => 10, "merchant" => "Burger King", "time" => "2019-02-13T14:00:03.000Z"}}
     ]
 
     expected_result = [
       %{account: nil, violations: ["account-not-initialized"]},
       %{account: %Account{available_limit: 100, active_card: true}, violations: []},
       %{account: %Account{available_limit: 100, active_card: true}, violations: ["account-already-initialized"]},
+      %{account: %Account{available_limit: 100, active_card: true}, violations: ["account-already-initialized"]},
       %{account: %Account{available_limit: 90, active_card: true}, violations: []},
       %{account: %Account{available_limit: 90, active_card: true}, violations: ["double-transaction"]},
-      %{account: %Account{available_limit: 40, active_card: true}, violations: []},
-      %{account: %Account{available_limit: 40, active_card: true}, violations: ["insufficient-limit"]},
+      %{account: %Account{available_limit: 80, active_card: true}, violations: []},
+      %{account: %Account{available_limit: 30, active_card: true}, violations: []},
+      %{account: %Account{available_limit: 30, active_card: true}, violations: ["insufficient-limit"]},
       %{account: %Account{available_limit: 20, active_card: true}, violations: []},
       %{account: %Account{available_limit: 15, active_card: true}, violations: []},
       %{account: %Account{available_limit: 10, active_card: true}, violations: []},
-      %{account: %Account{available_limit: 10, active_card: true}, violations: ["high-frequency-small-interval"]}
+      %{account: %Account{available_limit: 10, active_card: true}, violations: ["high-frequency-small-interval"]},
+      %{account: %Account{active_card: true, available_limit: 0}, violations: []}
     ]
 
     assert Authorizer.authorize(operations) == expected_result
