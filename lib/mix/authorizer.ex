@@ -1,4 +1,4 @@
-defmodule Mix.Tasks.AuthorizerForFile do
+defmodule Mix.Tasks.Authorizer do
   use Mix.Task
 
   def run(parameters) do
